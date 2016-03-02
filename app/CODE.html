@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style media="screen">
+      h4 {color: blue;}
+      pre {line-height: 120%;}
+      .del {background-color: #FCCACA; color: #777;}
+      .add {background-color: #C5FCC5; color: #000;}
+    </style>
+
+  </head>
+  <body>
+    <div class="container">
+
+<h2>Creating Your First Custom Service</h2>
+
+<h4>03:00 - app/js/services/EventData.js</h4>
+<pre>
+<span class="add">eventsApp.factory('eventData', function() {
+  return {
+    event: {
+      name: 'Angular Boot Camp',
+      date: '1/1/2013',
+      time: '10:30 am',
+      location: {
+        address: 'Google Headquarters',
+        city: 'Mountain View',
+        province: 'CA'
+      },
+      imageUrl: '/img/angularjs-logo.png',
+      sessions: [
+        {
+          name: 'Directives Masterclass',
+          creatorName: 'Bob Smith',
+          duration: 1,
+          level: 'Advanced',
+          abstract: 'In this session you will learn the ins and outs of directives!',
+          upVoteCount: 0
+        },
+        {
+          name: 'Scopes for fun and profit',
+          creatorName: 'John Doe',
+          duration: 2,
+          level: 'Introductory',
+          abstract: 'This session will take a closer look at scopes. Learn what they do, how they do it, and how to get them to do it for you.',
+          upVoteCount: 0
+        },
+        {
+          name: 'Well Behaved Controllers',
+          creatorName: 'Jane Doe',
+          duration: 4,
+          level: 'Intermediate',
+          abstract: 'Controllers are the beginning of everything Angular does. Learn how to craft controllers that will win the respect of your friends and neighbors',
+          upVoteCount: 0
+        }
+      ]
+    }
+  };
+});</span>
+</pre>
+
+<h4>03:23 - app/js/controllers/EventController.js</h4>
+<pre>
+'use strict';
+
+eventsApp.controller('EventController',
+  function EventController($scope<span class="add">, eventData</span>) {
+    $scope.sortorder = 'name';
+<span class="add">      $scope.event = eventData.event;</span>
+<span class="del">      $scope.event = {
+       name: 'Angular Boot Camp',
+       date: '1/1/2013',
+       time: '10:30 am',
+       location: {
+         address: 'Google Headquarters',
+         city: 'Mountain View',
+         province: 'CA'
+       },
+       imageUrl: '/img/angularjs-logo.png',
+       sessions: [
+         {
+           name: 'Directives Masterclass',
+           creatorName: 'Bob Smith',
+           duration: 1,
+           level: 'Advanced',
+           abstract: 'In this session you will learn the ins and outs of directives!',
+           upVoteCount: 0
+         },
+         {
+           name: 'Scopes for fun and profit',
+           creatorName: 'John Doe',
+           duration: 2,
+           level: 'Introductory',
+           abstract: 'This session will take a closer look at scopes. Learn what they do, how they do it, and how to get them to do it for you.',
+           upVoteCount: 0
+         },
+         {
+           name: 'Well Behaved Controllers',
+           creatorName: 'Jane Doe',
+           duration: 4,
+           level: 'Intermediate',
+           abstract: 'Controllers are the beginning of everything Angular does. Learn how to craft controllers that will win the respect of your friends and neighbors',
+           upVoteCount: 0
+         }
+       ]
+    };</span>
+
+    $scope.upVoteSession = function(session) {
+      session.upVoteCount++;
+    };
+
+    $scope.downVoteSession = function(session) {
+      session.upVoteCount--;
+    }
+
+  });
+</pre>
+
+<h4>03:58 - app/EventDetails.html</h4>
+<pre>
+  &lt;!doctype html&gt;
+  &lt;html ng-app=&quot;eventsApp&quot;&gt;
+    &lt;head&gt;
+      &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/bootstrap.min.css&quot;&gt;
+      &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/app.css&quot;&gt;
+    &lt;/head&gt;
+
+
+    &lt;body ng-cloak&gt;
+      &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;navbar&quot;&gt;
+          &lt;div class=&quot;navbar-inner&quot;&gt;
+            &lt;ul class=&quot;nav&quot;&gt;
+              &lt;li&gt;&lt;a href=&quot;/NewEvent.html&quot;&gt;Create Event&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div ng-controller=&quot;EventController&quot; style=&quot;padding-left:20px; padding-right:20px&quot;&gt;
+          &lt;img ng-src=&quot;{{event.imageUrl}}&quot; alt=&quot;{{event.name}}&quot;&gt;
+          &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;span11&quot;&gt;
+              &lt;h2&gt;{{event.name | uppercase}} &lt;/h2&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;span3&quot;&gt;
+              &lt;div&gt;&lt;strong&gt;Date:&lt;/strong&gt; {{event.date}}&lt;/div&gt;
+              &lt;div&gt;&lt;strong&gt;Time:&lt;/strong&gt; {{event.time}}&lt;/div&gt;
+              &lt;div&gt;&lt;strong&gt;Price:&lt;/strong&gt; {{34 | currency}}&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;span4&quot;&gt;
+              &lt;address&gt;
+                &lt;strong&gt;Address:&lt;/strong&gt;&lt;br /&gt;
+                {{event.location.address}}&lt;br /&gt;
+                {{event.location.city}}, {{event.location.province}}
+              &lt;/address&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;hr&gt;
+
+          &lt;h3&gt;Sessions&lt;/h3&gt;
+          Order By:
+          &lt;select name=&quot;&quot; id=&quot;&quot; ng-model=&quot;sortorder&quot; class=&quot;input-small&quot;&gt;
+            &lt;option value=&quot;name&quot; selected&gt;Name&lt;/option&gt;
+            &lt;option value=&quot;-upVoteCount&quot;&gt;Votes&lt;/option&gt;
+          &lt;/select&gt;
+          Show:
+          &lt;select name=&quot;&quot; id=&quot;&quot; ng-model=&quot;query.level&quot; class=&quot;input-medium&quot;&gt;
+            &lt;option value=&quot;&quot; selected&gt;All&lt;/option&gt;
+            &lt;option value=&quot;introductory&quot; &gt;Introductory&lt;/option&gt;
+            &lt;option value=&quot;intermediate&quot; &gt;Intermediate&lt;/option&gt;
+            &lt;option value=&quot;advanced&quot; &gt;Advanced&lt;/option&gt;
+          &lt;/select&gt;
+          &lt;ul class=&quot;thumbnails&quot;&gt;
+            &lt;li ng-repeat=&quot;session in event.sessions | orderBy:sortorder | limitTo:3 | filter:query&quot;&gt;
+
+              &lt;div class=&quot;row session&quot;&gt;
+                &lt;div class=&quot;span0 well votingWidget&quot;&gt;
+                  &lt;div class=&quot;votingButton&quot; ng-click=&quot;upVoteSession(session)&quot;&gt;
+                    &lt;i class=&quot;icon-chevron-up icon-white&quot;&gt;&lt;/i&gt;
+                  &lt;/div&gt;
+                  &lt;div class=&quot;badge badge-inverse&quot;&gt;
+                    &lt;div&gt;{{session.upVoteCount}}&lt;/div&gt;
+                  &lt;/div&gt;
+                  &lt;div class=&quot;votingButton&quot; ng-click=&quot;downVoteSession(session)&quot;&gt;
+                    &lt;i class=&quot;icon-chevron-down&quot;&gt;&lt;/i&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;well span9&quot;&gt;
+                  &lt;h4 class=&quot;well-title&quot;&gt;{{session.name}}&lt;/h4&gt;
+                  &lt;h6 style=&quot;margin-top:-10px&quot;&gt;{{session.creatorName}}&lt;/h6&gt;
+                  &lt;span&gt;Duration: {{session.duration | durations}}&lt;/span&gt;&lt;br /&gt;
+                  &lt;span&gt;Level: {{session.level}}&lt;/span&gt;
+
+                  &lt;p&gt;{{session.abstract}}&lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;script src=&quot;/lib/jquery.min.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;/lib/underscore-1.4.4.min.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;/lib/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;/lib/angular/angular.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;/lib/angular/angular-sanitize.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;/js/app.js&quot;&gt;&lt;/script&gt;
+      &lt;script src=&quot;/js/controllers/EventController.js&quot;&gt;&lt;/script&gt;
+<span class="add">      &lt;script src=&quot;/js/services/EventData.js&quot;&gt;&lt;/script&gt;</span>
+      &lt;script src=&quot;/js/filters.js&quot;&gt;&lt;/script&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+</pre>
+
+<h4>NEXT</h4>
+<pre>
+
+</pre>
+
+<h4>NEXT</h4>
+<pre>
+
+</pre>
+
+
+    </div>
+  </body>
+</html>
