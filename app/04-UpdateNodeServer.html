@@ -14,9 +14,9 @@
   <body>
     <div class="container">
 
-<h2>01 - Creating Your First Custom Service</h2>
+<h2>04 - Update Node Server for JSON Resquests</h2>
 <br>
-<h4>00:42 - scripts/web-server.js</h4>
+<h4>0:42 - scripts/web-server.js</h4>
 <pre>var express = require('express');
 var path = require('path');
 <span class="add">var events = require('./eventsController');</span>
@@ -33,13 +33,13 @@ console.log('Listening on port ' + 8000 + '...');
 
 </pre>
 <br>
-<h4>00:53 - (on command line)</h4>
+<h4>0:53 - (on command line)</h4>
 <pre>
 npm install body-parser
 </pre>
 <br>
 
-<h4>01:10 - scripts/web-server.js</h4>
+<h4>1:10 - scripts/web-server.js</h4>
 <pre>var express = require('express');
 var path = require('path');
 var events = require('./eventsController');
@@ -59,7 +59,7 @@ console.log('Listening on port ' + 8000 + '...');
 </pre>
 <br>
 
-<h4>02:56 - scripts/eventsController.js</h4>
+<h4>2:56 - scripts/eventsController.js</h4>
 <pre><span class="add">var fs = require('fs');
 
 module.exports.get = function(req, res) {
