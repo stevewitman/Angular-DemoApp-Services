@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style media="screen">
+      h2 {color: #D14900;}
+      h4 {color: #02169C;}
+      pre {line-height: 120%;}
+      .del {background-color: #FCCACA; color: #777;}
+      .add {background-color: #C5FCC5; color: #000;}
+    </style>
+
+  </head>
+  <body>
+    <div class="container">
+
+<h2>01 - Creating Your First Custom Service</h2>
+<br>
+<h4>00:42 - scripts/web-server.js</h4>
+<pre>var express = require('express');
+var path = require('path');
+<span class="add">var events = require('./eventsController');</span>
+var app = express();
+var rootPath = path.normalize(__dirname + '/../');
+
+app.use(express.static( rootPath + '/app'));
+
+<span class="add">app.get('/data/event/:id', events.get);
+app.post('/data/event/:id', events.save);</span>
+
+app.listen(8000);
+console.log('Listening on port ' + 8000 + '...');
+
+</pre>
+<br>
+<h4>00:53 - (on command line)</h4>
+<pre>
+npm install body-parser
+</pre>
+<br>
+
+<h4>01:10 - scripts/web-server.js</h4>
+<pre>var express = require('express');
+var path = require('path');
+var events = require('./eventsController');
+var app = express();
+var rootPath = path.normalize(__dirname + '/../');
+<span class="add">var bodyParser = require('body-parser');</span>
+
+<span class="add">app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());</span>
+app.use(express.static( rootPath + '/app'));
+
+app.get('/data/event/:id', events.get);
+app.post('/data/event/:id', events.save);
+
+app.listen(8000);
+console.log('Listening on port ' + 8000 + '...');
+</pre>
+<br>
+
+<h4>02:56 - scripts/eventsController.js</h4>
+<pre><span class="add">var fs = require('fs');
+
+module.exports.get = function(req, res) {
+  var event = fs.readFileSync('app/data/event/' + req.params.id + '.json', 'utf8');
+  res.setHeader('Content-Type', 'application/json');
+  res.send(event);
+}
+
+module.exports.save = function(req, res) {
+  var event = req.body;
+  fs.writeFileSync('app/data/event/' + req.params.id + '.json', JSON.stringify(event));
+  res.send(event);
+}</span>
+</pre>
+<br>
+
+    </div>
+  </body>
+</html>
