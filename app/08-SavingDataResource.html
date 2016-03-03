@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style media="screen">
+      h2 {color: #D14900;}
+      h4 {color: #02169C;}
+      pre {line-height: 120%;}
+      .del {background-color: #FCCACA; color: #777;}
+      .add {background-color: #C5FCC5; color: #000;}
+    </style>
+
+  </head>
+  <body>
+    <div class="container">
+
+<h2>08 - Saving Data with $resource</h2>
+<br>
+<h4>0:32 - path</h4>
+<pre>eventsApp.factory('eventData', function($resource) {
+<span class="add">    var resource = $resource('/data/event/:id', {id:'@id'});</span>
+    return {
+        getEvent: function() {
+<span class="del">            return $resource('/data/event/:id', {id:'@id'}).get({id:1});
+        }</span>
+<span class="add">            return resource.get({id:1});
+        },
+        save: function(event) {
+            return resource.save(event);
+        }</span>
+    };
+});
+</pre>
+<br>
+
+<h4>0:58 - app/js/controllers/EditEventController.js</h4>
+<pre>'use strict';
+
+eventsApp.controller('EditEventController',
+    function EditEventController($scope, eventData) {
+
+        $scope.event = {};
+
+        $scope.saveEvent = function(event<span class="add">, newEventForm</span>) {
+            if(newEventForm.$valid) {
+<span class="del">                window.alert('event' + event.name + ' saved!');</span>
+<span class="add">                eventData.save(event)
+                    .$promise
+                    .then(function(response) { console.log('success', response)})
+                    .catch(function(response) { console.log('failure', response)});</span>
+            }
+        };
+
+        $scope.cancelEvent = function() {
+        window.location = '/EventDetails.html';
+        }
+
+    }
+);
+</pre>
+<br>
+
+<h4>1:09 - app/NewEvent.html</h4>
+<pre>      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script src=&quot;/lib/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;/lib/underscore-1.4.4.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;/lib/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;/lib/angular/angular.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;/lib/angular/angular-sanitize.js&quot;&gt;&lt;/script&gt;
+<span class="add">    &lt;script src=&quot;/lib/angular/angular-resource.js&quot;&gt;&lt;/script&gt;</span>
+    &lt;script src=&quot;/js/app.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;/js/controllers/EventController.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;/js/controllers/EditEventController.js&quot;&gt;&lt;/script&gt;
+<span class="add">    &lt;script src=&quot;/js/services/EventData.js&quot;&gt;&lt;/script&gt;</span>
+    &lt;script src=&quot;/js/filters.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<br>
+
+<h4>2:03 - app/js/services/EventData.js</h4>
+<pre>eventsApp.factory('eventData', function($resource) {
+    var resource = $resource('/data/event/:id', {id:'@id'});
+    return {
+        getEvent: function() {
+            return resource.get({id:1});
+        },
+        save: function(event)
+<span class="add">            event.id = 999;</span>
+            return resource.save(event);
+        }
+    };
+});
+</pre>
+<br>
+
+    </div>
+  </body>
+</html>
+
+<!-- <span class="add"></span> -->
